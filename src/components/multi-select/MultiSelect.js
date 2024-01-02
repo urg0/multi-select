@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { ReactSVG } from "react-svg";
 
+import useClickOutside from "../../hooks/useClickOutside";
+
 import DropdownList from "../dropdown/dropdown-list/DropdownList";
 import Caret from "../../assets/icons/caret-up.svg";
 
@@ -10,7 +12,9 @@ import SelectedCharacterItem from "../selected-character-item/SelectedCharacterI
 const url = "https://rickandmortyapi.com/api/character/";
 
 const MultiSelect = () => {
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const { dropdownRef, isDropdownOpen, toggleDropdownMenu, openDropdownMenu } =
+    useClickOutside();
+
   const [searchQuery, setSearchQuery] = useState("");
 
   const [selectedCharacters, setSelectedCharacters] = useState([]);
@@ -40,10 +44,6 @@ const MultiSelect = () => {
 
     fetchData();
   }, []);
-
-  const toggleDropdown = () => {
-    setIsDropdownVisible((prevState) => !prevState);
-  };
 
   const selectHandler = (name, isChecked) => {
     if (isChecked) {
@@ -91,22 +91,24 @@ const MultiSelect = () => {
             className="multi-select-input"
             placeholder="Search any character..."
             onChange={(e) => setSearchQuery(e.target.value)}
-            onClick={() => setIsDropdownVisible(true)}
+            onClick={openDropdownMenu}
           />
           <ReactSVG
             src={Caret}
-            className={isDropdownVisible ? "caret-icon-down" : "caret-icon"}
-            onClick={toggleDropdown}
+            className={isDropdownOpen ? "caret-icon-down" : "caret-icon"}
+            onClick={toggleDropdownMenu}
           />
         </div>
       </div>
-      {isDropdownVisible && (
-        <DropdownList
-          list={filteredData}
-          selectHandler={selectHandler}
-          isCharacterSelected={isCharacterSelected}
-          searchQuery={searchQuery}
-        />
+      {isDropdownOpen && (
+        <div ref={dropdownRef}>
+          <DropdownList
+            list={filteredData}
+            selectHandler={selectHandler}
+            isCharacterSelected={isCharacterSelected}
+            searchQuery={searchQuery}
+          />
+        </div>
       )}
       {!loading && filteredData?.length === 0 && (
         <div className="no-match">No character found. Misspell?</div>

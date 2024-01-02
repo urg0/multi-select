@@ -1,0 +1,47 @@
+.multi-select-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 5rem;
+  height: 100vh;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid #000;
+  border-radius: 16px;
+  width: 300px;
+  flex-wrap: wrap;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.multi-select-input {
+  height: 32px;
+  border: none;
+  border-bottom: 1px solid #97a1b6;
+  margin-bottom: 4px;
+  margin-left: 16px;
+  width: 100%;
+  outline: none;
+}
+.caret-icon,
+.caret-icon-down {
+  width: 22px;
+  height: 22px;
+  margin-right: 12px;
+  cursor: pointer;
+}
+.caret-icon-down {
+  transform: rotate(180deg);
+}
+
+.no-match {
+  margin-top: 8px;
+  color: #cf4a4a;
+}

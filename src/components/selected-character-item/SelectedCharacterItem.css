@@ -1,0 +1,25 @@
+.selected-input {
+  font-size: 12px;
+  margin: 4px;
+  padding: 6px;
+  border-radius: 8px;
+  display: flex;
+  background-color: #e3e7ef;
+}
+
+.delete-icon {
+  width: 16px;
+  height: 16px;
+  fill: #97a1b6;
+}
+.delete-icon:hover {
+  fill: #cf4a4a;
+  transform: scale(1.1);
+}
+
+.remove-button {
+  background-color: inherit;
+  border: none;
+  margin-left: 4px;
+  cursor: pointer;
+}

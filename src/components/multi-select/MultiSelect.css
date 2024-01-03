@@ -3,16 +3,16 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  margin-top: 5rem;
+  margin-top: 4rem;
   height: 100vh;
 }
 
 .input-container {
   display: flex;
   align-items: center;
-  border: 1px solid #000;
+  border: 1px solid #97a1b6;
   border-radius: 16px;
-  width: 300px;
+  width: 500px;
   flex-wrap: wrap;
 }
 

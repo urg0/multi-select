@@ -1,52 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ReactSVG } from "react-svg";
 
 import useClickOutside from "../../hooks/useClickOutside";
+import useKeyboardNavigation from "../../hooks/UseKeyboardNavigation";
+import useFetch from "../../hooks/useFetch";
 
 import DropdownList from "../dropdown/dropdown-list/DropdownList";
+import SelectedCharacterItem from "../selected-character-item/SelectedCharacterItem";
+
 import Caret from "../../assets/icons/caret-up.svg";
+import LoadingIcon from "../../assets/icons/loading.svg";
 
 import "./MultiSelect.css";
-import SelectedCharacterItem from "../selected-character-item/SelectedCharacterItem";
 
 const url = "https://rickandmortyapi.com/api/character/";
 
 const MultiSelect = () => {
-  const { dropdownRef, isDropdownOpen, toggleDropdownMenu, openDropdownMenu } =
-    useClickOutside();
+  const { data: characters, loading, error } = useFetch(url);
+
+  const {
+    dropdownRef,
+    isDropdownOpen,
+    toggleDropdownMenu,
+    openDropdownMenu,
+    closeDropdownMenu,
+  } = useClickOutside();
 
   const [searchQuery, setSearchQuery] = useState("");
 
   const [selectedCharacters, setSelectedCharacters] = useState([]);
-  const [characters, setCharacters] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [activeCharacterIndex, setActiveCharacterIndex] = useState(0);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(url);
-
-        if (!response.ok) {
-          setError(true);
-          throw new Error(`Error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setCharacters(data.results);
-        setLoading(false);
-      } catch (error) {
-        console.error("Something went wrong:", error);
-        setError("Something went wrong.");
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const selectHandler = (name, isChecked) => {
-    if (isChecked) {
+  const selectCharacterHandler = (name, isChecked) => {
+    if (isChecked && name) {
       setSelectedCharacters((prevItems) => [...prevItems, name]);
     } else {
       setSelectedCharacters((prevItems) =>
@@ -63,12 +49,28 @@ const MultiSelect = () => {
     return selectedCharacters.includes(characterName);
   };
 
-  const removeCharacter = (name) => {
+  const onSearchQueryChange = (event) => {
+    openDropdownMenu(event);
+    setSearchQuery(event.target.value);
+  };
+
+  const removeCharacter = (event, name) => {
+    event.stopPropagation();
     const filteredCharacters = selectedCharacters?.filter((selectedName) => {
       return name !== selectedName;
     });
     setSelectedCharacters(filteredCharacters);
   };
+  const keyDownHandler = useKeyboardNavigation(
+    characters,
+    activeCharacterIndex,
+    setActiveCharacterIndex,
+    selectCharacterHandler,
+    isCharacterSelected,
+    removeCharacter,
+    openDropdownMenu,
+    closeDropdownMenu
+  );
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -80,6 +82,7 @@ const MultiSelect = () => {
         {selectedCharacters?.map((character) => {
           return (
             <SelectedCharacterItem
+              key={character}
               character={character}
               removeCharacter={removeCharacter}
             />
@@ -90,8 +93,9 @@ const MultiSelect = () => {
             type="text"
             className="multi-select-input"
             placeholder="Search any character..."
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={onSearchQueryChange}
             onClick={openDropdownMenu}
+            onKeyDown={keyDownHandler}
           />
           <ReactSVG
             src={Caret}
@@ -104,16 +108,17 @@ const MultiSelect = () => {
         <div ref={dropdownRef}>
           <DropdownList
             list={filteredData}
-            selectHandler={selectHandler}
+            selectCharacterHandler={selectCharacterHandler}
             isCharacterSelected={isCharacterSelected}
             searchQuery={searchQuery}
+            activeCharacterIndex={activeCharacterIndex}
           />
         </div>
       )}
       {!loading && filteredData?.length === 0 && (
         <div className="no-match">No character found. Misspell?</div>
       )}
-      {loading && <div>Loading</div>}
+      {loading && <ReactSVG src={LoadingIcon} className="loading-icon" />}
     </div>
   );
 };

@@ -15,6 +15,9 @@ const useClickOutside = (initialState = false) => {
     event.stopPropagation();
     setIsDropdownOpen(true);
   };
+  const closeDropdownMenu = () => {
+    setIsDropdownOpen(false);
+  };
 
   const toggleDropdownMenu = (event) => {
     event.stopPropagation();
@@ -30,7 +33,13 @@ const useClickOutside = (initialState = false) => {
     };
   }, [isDropdownOpen]);
 
-  return { dropdownRef, isDropdownOpen, toggleDropdownMenu, openDropdownMenu };
+  return {
+    dropdownRef,
+    isDropdownOpen,
+    toggleDropdownMenu,
+    openDropdownMenu,
+    closeDropdownMenu,
+  };
 };
 
 export default useClickOutside;

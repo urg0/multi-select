@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import "./DropdownItem.css";
 import { highlightMatchedText } from "../../../utils/utils.service";
@@ -7,32 +7,34 @@ const DropdownItem = ({
   name,
   image,
   episodeCount,
-  selectHandler,
+  id,
+  selectCharacterHandler,
   isCharacterSelected,
   searchQuery,
+  activeCharacterIndex,
 }) => {
-  const [isChecked, setIsChecked] = useState(isCharacterSelected(name));
-
-  useEffect(() => {
-    setIsChecked(isCharacterSelected(name));
-  }, [name, isCharacterSelected]);
-
   const onSelect = () => {
-    selectHandler(name, !isChecked);
-    setIsChecked((prevState) => !prevState);
+    selectCharacterHandler(name, !isCharacterSelected(name));
   };
 
   return (
-    <div className={`dropdown-item-container ${isChecked && "selected"} `}>
+    <div
+      className={`dropdown-item-container ${
+        isCharacterSelected(name) && "selected"
+      }`}
+      onClick={onSelect}
+    >
       <input
         type="checkbox"
         className="checkbox"
         onChange={onSelect}
-        checked={isChecked}
+        checked={isCharacterSelected(name)}
       />
-      <img src={image} alt="test" className="character-image" />
+      <img src={image} alt={name} loading="lazy" className="character-image" />
       <div className="info-container">
-        <h2 className="name">{highlightMatchedText(name, searchQuery)}</h2>
+        <h2 className={`name ${activeCharacterIndex === id && "active"}`}>
+          {highlightMatchedText(name, searchQuery)}
+        </h2>
         <span className="episode-count">{episodeCount} Episodes</span>
       </div>
     </div>

@@ -37,6 +37,11 @@
   margin-right: 12px;
   cursor: pointer;
 }
+
+.caret-icon:hover {
+  transform: scale(1.2);
+}
+
 .caret-icon-down {
   transform: rotate(180deg);
 }

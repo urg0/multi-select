@@ -11,7 +11,7 @@ const SelectedCharacterItem = ({ character, removeCharacter }) => {
       <span key={character}>{character}</span>
       <button
         className="remove-button"
-        onClick={() => removeCharacter(character)}
+        onClick={(event) => removeCharacter(event, character)}
       >
         <ReactSVG src={Delete} className="delete-icon" />
       </button>

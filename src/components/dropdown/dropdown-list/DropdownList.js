@@ -5,22 +5,25 @@ import "./DropdownList.css";
 
 const DropdownList = ({
   list,
-  selectHandler,
+  selectCharacterHandler,
   isCharacterSelected,
   searchQuery,
+  activeCharacterIndex,
 }) => {
   return (
     <div className="dropdown-list">
       {list?.map(({ id, name, image, episode }) => {
         return (
           <DropdownItem
-            key={id}
+            key={name}
             name={name}
             image={image}
             episodeCount={episode.length}
-            selectHandler={selectHandler}
+            onCharacterSelect={selectCharacterHandler}
             isCharacterSelected={isCharacterSelected}
             searchQuery={searchQuery}
+            activeCharacterIndex={activeCharacterIndex}
+            id={id}
           />
         );
       })}

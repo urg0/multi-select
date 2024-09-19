@@ -12,18 +12,19 @@ const DropdownList = ({
 }) => {
   return (
     <div className="dropdown-list">
-      {list?.map(({ id, name, image, episode }) => {
+      {list?.map(({ id, name, image, episode }, index) => {
         return (
           <DropdownItem
             key={name}
             name={name}
             image={image}
-            episodeCount={episode.length}
+            episodeCount={episode?.length}
             selectCharacterHandler={selectCharacterHandler}
             isCharacterSelected={isCharacterSelected}
             searchQuery={searchQuery}
             activeCharacterIndex={activeCharacterIndex}
             id={id}
+            index={index}
           />
         );
       })}

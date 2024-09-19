@@ -1,18 +1,22 @@
-import React from "react";
+import { highlightMatchedText } from "../../../utils/utils.service";
+import useScrollIntoView from "../../../hooks/useScrolIntoView";
 
 import "./DropdownItem.css";
-import { highlightMatchedText } from "../../../utils/utils.service";
 
 const DropdownItem = ({
+  index,
   name,
   image,
   episodeCount,
-  id,
   selectCharacterHandler,
   isCharacterSelected,
   searchQuery,
   activeCharacterIndex,
 }) => {
+  const isActive = activeCharacterIndex === index;
+
+  const activeCharacterRef = useScrollIntoView(isActive);
+
   const onSelect = () => {
     selectCharacterHandler(name, !isCharacterSelected(name));
   };
@@ -23,6 +27,7 @@ const DropdownItem = ({
         isCharacterSelected(name) && "selected"
       }`}
       onClick={onSelect}
+      ref={activeCharacterRef}
     >
       <input
         type="checkbox"
@@ -32,7 +37,7 @@ const DropdownItem = ({
       />
       <img src={image} alt={name} loading="lazy" className="character-image" />
       <div className="info-container">
-        <h2 className={`name ${activeCharacterIndex === id && "active"}`}>
+        <h2 className={`name ${activeCharacterIndex === index && "active"}`}>
           {highlightMatchedText(name, searchQuery)}
         </h2>
         <span className="episode-count">{episodeCount} Episodes</span>

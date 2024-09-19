@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
 const useKeyboardNavigation = (
-  characters,
+  filteredData,
   activeCharacterIndex,
   setActiveCharacterIndex,
   selectCharacterHandler,
@@ -23,7 +23,7 @@ const useKeyboardNavigation = (
         case "ArrowDown":
         case "Tab":
           event.preventDefault();
-          if (activeCharacterIndex < characters.length - 1) {
+          if (activeCharacterIndex < filteredData.length - 1) {
             setActiveCharacterIndex((prevState) => prevState + 1);
           } else {
             setActiveCharacterIndex(0);
@@ -31,7 +31,7 @@ const useKeyboardNavigation = (
           break;
         case "Enter":
           if (activeCharacterIndex >= 0) {
-            const characterName = characters[activeCharacterIndex - 1]?.name;
+            const characterName = filteredData[activeCharacterIndex]?.name;
             selectCharacterHandler(
               characterName,
               !isCharacterSelected(characterName)
@@ -39,7 +39,7 @@ const useKeyboardNavigation = (
           }
           break;
         case "Backspace":
-          const characterName = characters[activeCharacterIndex - 1]?.name;
+          const characterName = filteredData[activeCharacterIndex - 1]?.name;
           removeCharacter({ stopPropagation: () => {} }, characterName);
           break;
         case "Escape":
@@ -51,7 +51,7 @@ const useKeyboardNavigation = (
       }
     },
     [
-      characters,
+      filteredData,
       activeCharacterIndex,
       setActiveCharacterIndex,
       selectCharacterHandler,

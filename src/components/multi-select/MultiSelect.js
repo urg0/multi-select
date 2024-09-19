@@ -1,22 +1,25 @@
 import React, { useState } from "react";
-import { ReactSVG } from "react-svg";
+import { useQuery } from "react-query";
+import { getCharacters } from "../../services/api.service";
 
 import useClickOutside from "../../hooks/useClickOutside";
 import useKeyboardNavigation from "../../hooks/UseKeyboardNavigation";
-import useFetch from "../../hooks/useFetch";
 
 import DropdownList from "../dropdown/dropdown-list/DropdownList";
 import SelectedCharacterItem from "../selected-character-item/SelectedCharacterItem";
 
+import { ReactSVG } from "react-svg";
 import Caret from "../../assets/icons/caret-up.svg";
 import LoadingIcon from "../../assets/icons/loading.svg";
 
 import "./MultiSelect.css";
 
-const url = "https://rickandmortyapi.com/api/character/";
-
 const MultiSelect = () => {
-  const { data: characters, loading, error } = useFetch(url);
+  const {
+    data: characters,
+    isLoading,
+    isError,
+  } = useQuery("characters", getCharacters);
 
   const {
     dropdownRef,
@@ -62,7 +65,7 @@ const MultiSelect = () => {
     setSelectedCharacters(filteredCharacters);
   };
   const keyDownHandler = useKeyboardNavigation(
-    characters,
+    filteredData,
     activeCharacterIndex,
     setActiveCharacterIndex,
     selectCharacterHandler,
@@ -72,8 +75,8 @@ const MultiSelect = () => {
     closeDropdownMenu
   );
 
-  if (error) {
-    return <div>Error: {error}</div>;
+  if (isError) {
+    return <div>Something went wrong. {isError}</div>;
   }
 
   return (
@@ -115,10 +118,10 @@ const MultiSelect = () => {
           />
         </div>
       )}
-      {!loading && filteredData?.length === 0 && (
+      {!isLoading && filteredData?.length === 0 && (
         <div className="no-match">No character found. Misspell?</div>
       )}
-      {loading && <ReactSVG src={LoadingIcon} className="loading-icon" />}
+      {isLoading && <ReactSVG src={LoadingIcon} className="loading-icon" />}
     </div>
   );
 };
